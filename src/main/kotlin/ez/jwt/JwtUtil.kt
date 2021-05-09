@@ -92,7 +92,7 @@ class JwtUtil(val config: JwtAutoConfiguration) {
   /**
    * verify http Authorization header value
    */
-  fun verifyAuthHeader(authHeaderValue: Collection<String>?): JwtUser {
+  fun verifyAuthHeader(authHeaderValue: Iterable<String>?): JwtUser {
     return authHeaderValue?.firstOrNull {
       verifySchema(it)
     }?.let {
