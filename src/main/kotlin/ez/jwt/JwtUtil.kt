@@ -67,8 +67,18 @@ class JwtUtil(val config: JwtAutoConfiguration) {
       .body
   }
 
+  /**
+   * field names in this function should keep the same with [JwtUser]
+   */
   private fun verifyToken(claims: Claims): JwtUser {
-    return claims[config.userField] as? JwtUser ?: throw JwtException("claims.user invalid")
+    val userField = config.userField
+    val userMap = claims[userField, Map::class.java] ?: throw JwtException("claims.$userField is null")
+    val id = userMap["id"] as? String ?: throw JwtException("claims.user.id is not a String")
+    val roles = userMap["roles"] as? Iterable<*> ?: throw JwtException("claims.$userField.roles is not a Iterable")
+    val roleSet = roles.mapNotNullTo(mutableSetOf()) { it.toString() }
+    val perms = userMap["perms"] as? Iterable<*> ?: throw throw JwtException("claims.$userField.perms is not a Iterable")
+    val permSet = perms.mapNotNullTo(mutableSetOf()) { it.toString() }
+    return JwtUser(id, roleSet, permSet)
   }
 
   /**
