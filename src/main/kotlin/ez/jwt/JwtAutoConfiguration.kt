@@ -10,7 +10,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class JwtAutoConfiguration {
   /**
-   * jwt secretKey
+   * jwt secretKey.
+   * **NOTICE**: algorithm may require specific key format. eg: key for [SignatureAlgorithm.HS256] should have at least 256 bits(32 chars)
    */
   var secretKey = Math.random().toString()
 
