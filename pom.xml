@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>ez-jwt-spring-boot-starter</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <packaging>jar</packaging>
 
   <name>com.github.rainmanhhh ez-jwt-spring-boot-starter</name>
@@ -14,7 +14,7 @@
   <parent>
     <groupId>com.github.rainmanhhh</groupId>
     <artifactId>spring-kotlin-parent</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
