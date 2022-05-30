@@ -15,4 +15,5 @@ val Anon = JwtUser()
  * check whether the user is anonymous
  * @return true - user id is ""
  */
+@Suppress("unused")
 val JwtUser.isAnon get() = id == ""

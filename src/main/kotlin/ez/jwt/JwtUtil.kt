@@ -8,11 +8,12 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import javax.crypto.spec.SecretKeySpec
 
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 class JwtUtil(val config: JwtAutoConfiguration) {
   /**
    * schema prefix
    */
-  private val prefix = config.authorizationSchema + " "
+  val prefix = config.authorizationSchema + " "
 
   /**
    * final secretKey used by
