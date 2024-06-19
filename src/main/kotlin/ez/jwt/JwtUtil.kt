@@ -36,6 +36,7 @@ class JwtUtil(val config: JwtAutoConfiguration) {
           expiration(exp)
         }
       }
+      .claim(config.userField, user)
       .signWith(secretKey) //设置签名使用的签名算法和签名使用的秘钥
       .compact()
     if (logger.isDebugEnabled) {
@@ -69,17 +70,23 @@ class JwtUtil(val config: JwtAutoConfiguration) {
    * field names in this function should keep the same with [JwtUser]
    */
   private fun verifyToken(claims: Claims): JwtUser {
-    val userField = config.userField
-    val userMap =
-      claims[userField, Map::class.java] ?: throw JwtException("claims.$userField is null")
-    val id = userMap["id"] as? String ?: throw JwtException("claims.user.id is not a String")
-    val roles = userMap["roles"] as? Iterable<*>
-      ?: throw JwtException("claims.$userField.roles is not a Iterable")
-    val roleSet = roles.mapNotNullTo(mutableSetOf()) { it.toString() }
-    val perms = userMap["perms"] as? Iterable<*>
-      ?: throw throw JwtException("claims.$userField.perms is not a Iterable")
-    val permSet = perms.mapNotNullTo(mutableSetOf()) { it.toString() }
-    return JwtUser(id, roleSet, permSet)
+    try {
+      val userField = config.userField
+      val userMap =
+        claims[userField, Map::class.java] ?: throw JwtException("claims.$userField is null")
+      val id = userMap["id"] as? String ?: throw JwtException("claims.user.id is not a String")
+      val roles = userMap["roles"] as? Iterable<*>
+        ?: throw JwtException("claims.$userField.roles is not a Iterable")
+      val roleSet = roles.mapNotNullTo(mutableSetOf()) { it.toString() }
+      val perms = userMap["perms"] as? Iterable<*>
+        ?: throw throw JwtException("claims.$userField.perms is not a Iterable")
+      val permSet = perms.mapNotNullTo(mutableSetOf()) { it.toString() }
+      return JwtUser(id, roleSet, permSet)
+    } catch (e: JwtException) {
+      if (logger.isDebugEnabled)
+        logger.error("error claims: {}", claims)
+      throw e
+    }
   }
 
   /**
